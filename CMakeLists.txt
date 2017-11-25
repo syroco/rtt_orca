@@ -13,6 +13,7 @@ orocos_use_package(ocl-taskbrowser)
 orocos_use_package(ocl-deployment)
 
 include_directories(
+    include
     ${orca_INCLUDE_DIRS}
     ${OROCOS-RTT_INCLUDE_DIRS}
 )

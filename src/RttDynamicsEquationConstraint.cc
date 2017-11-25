@@ -1,4 +1,4 @@
-#include <orca/rtt_orca/constraint/RttGenericConstraint.h>
+#include <rtt_orca/constraint/RttGenericConstraint.h>
 #include <orca/common/WrenchData.h>
 
 namespace rtt_orca
