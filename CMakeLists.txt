@@ -3,7 +3,6 @@ project(rtt_orca)
 
 set(CMAKE_CXX_STANDARD 11)
 
-find_package(catkin QUIET)
 find_package(orca REQUIRED)
 find_package(OROCOS-RTT REQUIRED ${RTT_HINTS})
 
@@ -14,8 +13,6 @@ orocos_use_package(ocl-deployment)
 
 include_directories(
     include
-    ${orca_INCLUDE_DIRS}
-    ${OROCOS-RTT_INCLUDE_DIRS}
 )
 
 orocos_service(RttOrcaLoggerService src/RttOrcaLoggerService.cc)
@@ -44,6 +41,10 @@ target_link_libraries(RttDynamicsEquationConstraint orca::orca)
 
 orocos_component(RttQPSolver src/RttQPSolver.cc)
 target_link_libraries(RttQPSolver orca::orca)
+
+install(FILES scripts/rtt_orca-test.ops DESTINATION lib/rtt_orca
+    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+                    GROUP_EXECUTE GROUP_READ)
 
 orocos_generate_package()
 
