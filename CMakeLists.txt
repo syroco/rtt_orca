@@ -19,31 +19,31 @@ include_directories(
 )
 
 orocos_service(RttOrcaLoggerService src/RttOrcaLoggerService.cc)
-target_link_libraries(RttOrcaLoggerService ${orca_LIBRARIES})
+target_link_libraries(RttOrcaLoggerService orca::orca)
 
 orocos_service(RttOrcaRegisterService src/RttOrcaRegisterService.cc)
-target_link_libraries(RttOrcaRegisterService ${orca_LIBRARIES})
+target_link_libraries(RttOrcaRegisterService orca::orca)
 
 orocos_component(RttContact src/RttContact.cc)
-target_link_libraries(RttContact ${orca_LIBRARIES})
+target_link_libraries(RttContact orca::orca)
 
 orocos_component(RttCartesianTask src/RttCartesianTask.cc)
-target_link_libraries(RttCartesianTask ${orca_LIBRARIES})
+target_link_libraries(RttCartesianTask orca::orca)
 
 orocos_component(RttRegularisationTask src/RttRegularisationTask.cc)
-target_link_libraries(RttRegularisationTask ${orca_LIBRARIES})
+target_link_libraries(RttRegularisationTask orca::orca)
 
 orocos_component(RttJointAccelerationTask src/RttJointAccelerationTask.cc)
-target_link_libraries(RttJointAccelerationTask ${orca_LIBRARIES})
+target_link_libraries(RttJointAccelerationTask orca::orca)
 
 orocos_component(RttWrenchTask src/RttWrenchTask.cc)
-target_link_libraries(RttWrenchTask ${orca_LIBRARIES})
+target_link_libraries(RttWrenchTask orca::orca)
 
 orocos_component(RttDynamicsEquationConstraint src/RttDynamicsEquationConstraint.cc)
-target_link_libraries(RttDynamicsEquationConstraint ${orca_LIBRARIES})
+target_link_libraries(RttDynamicsEquationConstraint orca::orca)
 
 orocos_component(RttQPSolver src/RttQPSolver.cc)
-target_link_libraries(RttQPSolver ${orca_LIBRARIES})
+target_link_libraries(RttQPSolver orca::orca)
 
 orocos_generate_package()
 
