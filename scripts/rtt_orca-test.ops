@@ -39,18 +39,11 @@ regx.robot_model.setGravity(gravity)
 connectPeers("regx","robot")
 regx.connectToRobot("robot")
 regx.configure()
-regx.activate()
 regx.start()
+
+regx.activate()
 regx.insertInProblem()
 
-// loadComponent("contact1","rtt_orca::constraint::RttContact")
-// setActivity("contact1",1.0,10,ORO_SCHED_RT)
-// contact1.robot_model.loadModelFromFile(urdf)
-// contact1.robot_model.setBaseFrame(base_frame)
-// contact1.setControlFrame("link_6")
-// contact1.robot_model.print()
-// contact1.configure()
-// contact1.start()
 
 loadComponent("dyneq","rtt_orca::constraint::RttDynamicsEquationConstraint")
 setActivity("dyneq",0.001,30,ORO_SCHED_RT)
@@ -60,8 +53,9 @@ dyneq.robot_model.setGravity(gravity)
 connectPeers("dyneq","robot")
 dyneq.connectToRobot("robot")
 dyneq.configure()
-dyneq.activate()
 dyneq.start()
+
+dyneq.activate()
 dyneq.insertInProblem()
 
 loadComponent("qp","rtt_orca::optim::RttQPSolver<orca::optim::WeightedQPSolver>")
@@ -69,3 +63,6 @@ setActivity("qp",0.001,70,ORO_SCHED_RT)
 qp.setPrintLevel(0)
 qp.configure()
 qp.start()
+
+connect("qp.output.JointTorque","robot.command.JointTorque",ConnPolicy())
+
