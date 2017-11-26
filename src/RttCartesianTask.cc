@@ -14,19 +14,25 @@ namespace task
             this->addOperation("setControlFrame",&orca::task::CartesianTask::setControlFrame,this,RTT::OwnThread);
             this->addOperation("getBaseFrame",&orca::task::CartesianTask::getBaseFrame,this,RTT::OwnThread);
             this->addOperation("getControlFrame",&orca::task::CartesianTask::getControlFrame,this,RTT::OwnThread);
+            
+            this->provides("input")->addPort("CartesianAcceleration",port_cartesian_acceleration_des_);
         }
 
         void updateHook()
         {
             if(this->updateRobotModel())
             {
-                port_cartesian_acceleration_des_.readNewest(this->cart_acc_des_);
+                if(port_cartesian_acceleration_des_.readNewest(input_cmd_) == RTT::NewData)
+                {
+                    orca::task::CartesianTask::setDesired(input_cmd_);
+                }
                 orca::task::CartesianTask::update();
             }
         }
 
     protected:
         RTT::InputPort<Eigen::Matrix<double,6,1> > port_cartesian_acceleration_des_;
+        Eigen::Matrix<double,6,1> input_cmd_;
     };
 }
 }

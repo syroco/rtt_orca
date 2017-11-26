@@ -27,6 +27,9 @@ target_link_libraries(RttContact orca::orca)
 orocos_component(RttCartesianTask src/RttCartesianTask.cc)
 target_link_libraries(RttCartesianTask orca::orca)
 
+orocos_component(RttCartesianAccelerationPID src/RttCartesianAccelerationPID.cc)
+target_link_libraries(RttCartesianAccelerationPID orca::orca)
+
 orocos_component(RttRegularisationTask src/RttRegularisationTask.cc)
 target_link_libraries(RttRegularisationTask orca::orca)
 
