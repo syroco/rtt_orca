@@ -42,6 +42,9 @@ target_link_libraries(RttWrenchTask orca::orca)
 orocos_component(RttDynamicsEquationConstraint src/RttDynamicsEquationConstraint.cc)
 target_link_libraries(RttDynamicsEquationConstraint orca::orca)
 
+orocos_component(RttJointLimitConstraint src/RttJointLimitConstraint.cc)
+target_link_libraries(RttJointLimitConstraint orca::orca)
+
 orocos_component(RttQPSolver src/RttQPSolver.cc)
 target_link_libraries(RttQPSolver orca::orca)
 
