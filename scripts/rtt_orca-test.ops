@@ -87,9 +87,10 @@ cart_acc_pid.robot_model.setGravity(gravity)
 connectPeers("cart_acc_pid","robot")
 cart_acc_pid.connectToRobot("robot")
 
-cart_acc_pid.pid.setProportionalGain(array(100.,100.,100.,10.,10.,10.))
+cart_acc_pid.pid.setProportionalGain(array(1000.,1000.,1000.,10.,10.,10.))
 cart_acc_pid.pid.setDerivativeGain(array(10.,10.,10.,1.,1.,1.))
 
+cart_acc_pid.setBaseFrame( cart_task.getBaseFrame() )
 cart_acc_pid.setControlFrame( cart_task.getControlFrame() )
 connect("cart_acc_pid.output.CartesianAcceleration","cart_task.input.CartesianAcceleration",ConnPolicy())
 cart_acc_pid.configure()
