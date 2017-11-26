@@ -10,7 +10,20 @@ namespace task
     public:
         RttRegularisationTask(const std::string& name)
         : task::RttGenericTask(this,this,name)
-        {}
+        {
+            // this->provides("EuclidianNorm")->addOperation("setWeight"
+            //         , (void (orca::task::RegularisationTask<C>::*)(double)) &orca::task::RegularisationTask<C>::setWeight
+            //         ,this,RTT::OwnThread);
+            this->provides("EuclidianNorm")->addOperation("setWeight"
+                    , & RttRegularisationTask::setEuclidianNormWeightDiagonal
+                    ,this,RTT::OwnThread);
+        }
+
+        void setEuclidianNormWeightDiagonal(double weight)
+        {
+            orca::common::MutexLock lock(orca::task::RegularisationTask<C>::mutex);
+            orca::task::RegularisationTask<C>::setWeight(weight);
+        }
 
         void updateHook()
         {
