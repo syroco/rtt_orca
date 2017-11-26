@@ -22,7 +22,7 @@ namespace task
         void setEuclidianNormWeightDiagonal(double weight)
         {
             orca::common::MutexLock lock(orca::task::RegularisationTask<C>::mutex);
-            orca::task::RegularisationTask<C>::setWeight(weight);
+            orca::task::RegularisationTask<C>::EuclidianNorm().setWeight(weight);
         }
 
         void updateHook()
