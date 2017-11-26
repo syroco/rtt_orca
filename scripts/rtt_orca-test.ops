@@ -5,8 +5,8 @@ require("os")
 import("rtt_orca")
 import("eigen_typekit")
 
-this.require("orca_helper")  
-this.require("orca_logger")  
+loadService("this","orca_helper")  
+loadService("this","orca_logger")  
 
 orca_logger.setLogLevel( orca_logger.debug )
 
@@ -87,3 +87,4 @@ qp.start()
 
 connect("qp.output.JointTorque","robot.command.JointTorque",ConnPolicy())
 
+this.orca_helper.printAll()
