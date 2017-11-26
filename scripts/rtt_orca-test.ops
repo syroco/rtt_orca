@@ -44,6 +44,19 @@ regx.start()
 regx.activate()
 regx.insertInProblem()
 
+loadComponent("jnt_acc","rtt_orca::task::RttJointAccelerationTask")
+setActivity("jnt_acc",0.001,20,ORO_SCHED_RT)
+jnt_acc.robot_model.loadModelFromFile(urdf)
+jnt_acc.robot_model.setBaseFrame(base_frame)
+jnt_acc.robot_model.setGravity(gravity)
+connectPeers("jnt_acc","robot")
+jnt_acc.connectToRobot("robot")
+jnt_acc.configure()
+jnt_acc.start()
+
+jnt_acc.activate()
+jnt_acc.insertInProblem()
+
 
 loadComponent("dyneq","rtt_orca::constraint::RttDynamicsEquationConstraint")
 setActivity("dyneq",0.001,30,ORO_SCHED_RT)
