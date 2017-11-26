@@ -10,11 +10,6 @@ namespace constraint
         RttContact(const std::string& name)
         : common::RttTaskCommon(this,this,name)
         {
-            this->addOperation("insertInProblem",&orca::constraint::Contact::insertInProblem,this,RTT::OwnThread);
-            this->addOperation("removeFromProblem",&orca::constraint::Contact::removeFromProblem,this,RTT::OwnThread);
-            this->addOperation("desactivate",&orca::constraint::Contact::desactivate,this,RTT::OwnThread);
-            this->addOperation("activate",&orca::constraint::Contact::activate,this,RTT::OwnThread);
-            
             this->addOperation("setControlFrame",&orca::constraint::Contact::setControlFrame,this,RTT::OwnThread);
             this->addOperation("getFrictionCoeff",&orca::constraint::Contact::getFrictionCoeff,this,RTT::OwnThread);
             this->addOperation("getMargin",&orca::constraint::Contact::getMargin,this,RTT::OwnThread);

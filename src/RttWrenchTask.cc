@@ -10,11 +10,6 @@ namespace task
         RttWrenchTask(const std::string& name)
         : task::RttGenericTask(this,this,name)
         {
-            this->addOperation("insertInProblem",&orca::task::GenericTask::insertInProblem,this,RTT::OwnThread);
-            this->addOperation("removeFromProblem",&orca::task::GenericTask::removeFromProblem,this,RTT::OwnThread);
-            this->addOperation("setWeight",&orca::task::GenericTask::setWeight,this,RTT::OwnThread);
-            this->addOperation("getWeight",&orca::task::GenericTask::getWeight,this,RTT::OwnThread);
-            
             this->addOperation("setBaseFrame",&orca::task::WrenchTask::setBaseFrame,this,RTT::OwnThread);
             this->addOperation("setControlFrame",&orca::task::WrenchTask::setControlFrame,this,RTT::OwnThread);
             this->addOperation("getBaseFrame",&orca::task::WrenchTask::getBaseFrame,this,RTT::OwnThread);

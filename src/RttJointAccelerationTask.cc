@@ -10,9 +10,6 @@ namespace task
         RttJointAccelerationTask(const std::string& name)
         : task::RttGenericTask(this,this,name)
         {
-            this->addOperation("insertInProblem",&orca::task::GenericTask::insertInProblem,this,RTT::OwnThread);
-            this->addOperation("removeFromProblem",&orca::task::GenericTask::removeFromProblem,this,RTT::OwnThread);
-            
             this->provides("pid")->addOperation("setProportionalGain",&orca::common::PIDController<Eigen::Dynamic>::setProportionalGain,&this->pid(),RTT::OwnThread);
             this->provides("pid")->addOperation("setDerivativeGain",&orca::common::PIDController<Eigen::Dynamic>::setDerivativeGain,&this->pid(),RTT::OwnThread);
             
