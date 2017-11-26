@@ -80,12 +80,14 @@ namespace common
             if(this->updateRobotModel())
             {
                 orca::common::CartesianAccelerationPID::update();
-                port_cartesian_acceleration_cmd_.write( orca::common::CartesianAccelerationPID::getCommand() );
+                output_cmd_ = orca::common::CartesianAccelerationPID::getCommand();
+                port_cartesian_acceleration_cmd_.write( output_cmd_ );
             }
         }
 
     protected:
         RTT::OutputPort<Eigen::Matrix<double,6,1> > port_cartesian_acceleration_cmd_;
+        Eigen::Matrix<double,6,1> output_cmd_;
     };
 }
 }
