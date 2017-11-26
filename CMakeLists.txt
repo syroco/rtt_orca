@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.1.0)
 project(rtt_orca)
 
-set(CMAKE_CXX_STANDARD 11)
-
 find_package(orca REQUIRED)
 find_package(OROCOS-RTT REQUIRED ${RTT_HINTS})
 
 include(${OROCOS-RTT_USE_FILE_PATH}/UseOROCOS-RTT.cmake )
+
+orocos_find_package(orca REQUIRED)
 
 orocos_use_package(ocl-taskbrowser)
 orocos_use_package(ocl-deployment)
