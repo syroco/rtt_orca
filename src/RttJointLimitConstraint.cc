@@ -31,7 +31,8 @@ namespace constraint
 
         void updateHook()
         {
-            orca::constraint::JointAccelerationLimitConstraint::update();
+            if(this->updateRobotModel())
+                orca::constraint::JointAccelerationLimitConstraint::update();
         }
     };
     
