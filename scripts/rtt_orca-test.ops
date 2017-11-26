@@ -5,7 +5,9 @@ require("os")
 import("rtt_orca")
 import("eigen_typekit")
 
-this.require("orca_logger")     
+this.require("orca_helper")  
+this.require("orca_logger")  
+
 orca_logger.setLogLevel( orca_logger.debug )
 
 var string urdf = "/home/hoarau/isir/orca_ws/src/orca/examples/lwr.urdf"
@@ -30,6 +32,7 @@ robot.configure()
 robot.setModelConfiguration(strings("joint_0","joint_1","joint_3","joint_5"),array(-2.2,-0.1,1.47,-1.47))
 robot.start()
 
+os.usleep(200000)
 
 loadComponent("regx","rtt_orca::task::RttRegularisationTask<orca::optim::ControlVariable::X>")
 setActivity("regx",0.001,20,ORO_SCHED_RT)
@@ -40,7 +43,7 @@ connectPeers("regx","robot")
 regx.connectToRobot("robot")
 regx.configure()
 regx.start()
-
+os.usleep(200000)
 regx.activate()
 regx.insertInProblem()
 
@@ -49,11 +52,16 @@ setActivity("jnt_acc",0.001,20,ORO_SCHED_RT)
 jnt_acc.robot_model.loadModelFromFile(urdf)
 jnt_acc.robot_model.setBaseFrame(base_frame)
 jnt_acc.robot_model.setGravity(gravity)
+
+jnt_acc.pid.setProportionalGain(array(100.,100.,100.,100.,100.,100.,100.))
+jnt_acc.pid.setDerivativeGain(array(1.,1.,1.,1.,1.,1.,1.))
+jnt_acc.setDesired(array(0.,0.,0.,0.,0.,0.,0.) , array(0.,0.,0.,0.,0.,0.,0.) , array(0.,0.,0.,0.,0.,0.,0.))
+
 connectPeers("jnt_acc","robot")
 jnt_acc.connectToRobot("robot")
 jnt_acc.configure()
 jnt_acc.start()
-
+os.usleep(200000)
 jnt_acc.activate()
 jnt_acc.insertInProblem()
 
@@ -67,7 +75,7 @@ connectPeers("dyneq","robot")
 dyneq.connectToRobot("robot")
 dyneq.configure()
 dyneq.start()
-
+os.usleep(200000)
 dyneq.activate()
 dyneq.insertInProblem()
 

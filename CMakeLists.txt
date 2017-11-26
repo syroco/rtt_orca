@@ -18,8 +18,8 @@ include_directories(
 orocos_service(RttOrcaLoggerService src/RttOrcaLoggerService.cc)
 target_link_libraries(RttOrcaLoggerService orca::orca)
 
-orocos_service(RttOrcaRegisterService src/RttOrcaRegisterService.cc)
-target_link_libraries(RttOrcaRegisterService orca::orca)
+orocos_service(RttOrcaHelperService src/RttOrcaHelperService.cc)
+target_link_libraries(RttOrcaHelperService orca::orca)
 
 orocos_component(RttContact src/RttContact.cc)
 target_link_libraries(RttContact orca::orca)
