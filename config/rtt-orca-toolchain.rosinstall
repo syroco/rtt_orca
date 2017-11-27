@@ -1,0 +1,15 @@
+- git:
+    local-name: eigen_typekit
+    uri: https://github.com/syroco/eigen_typekit.git
+- git:
+    local-name: orca
+    uri: https://github.com/syroco/orca
+- git:
+    local-name: rtt_gazebo_embedded
+    uri: https://github.com/kuka-isir/rtt_gazebo_embedded
+- git:
+    local-name: rtt_gazebo_robot_interface
+    uri: https://github.com/kuka-isir/rtt_gazebo_robot_interface.git
+- git:
+    local-name: rtt_orca
+    uri: https://github.com/syroco/rtt_orca
