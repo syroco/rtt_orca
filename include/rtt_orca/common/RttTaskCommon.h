@@ -106,27 +106,27 @@ namespace common
                 RTT::log(RTT::Error) << "Wrong vector size. Provided " << grav.size() << ", expected 3" << RTT::endlog();
                 return;
             }
-            robot_data_helper_.eigRobotState.gravity = grav.head<3>();
+            eigRobotState_.gravity = grav.head<3>();
             gravity_in_ = grav;
             robot_.setGravity(gravity_in_);
         }
         
         bool updateRobotModel()
         {
-            RTT::FlowStatus fspos = port_jnt_pos_in_.readNewest(robot_data_helper_.eigRobotState.jointPos);
-            RTT::FlowStatus fsvel = port_jnt_vel_in_.readNewest(robot_data_helper_.eigRobotState.jointVel);
+            RTT::FlowStatus fspos = port_jnt_pos_in_.readNewest(eigRobotState_.jointPos);
+            RTT::FlowStatus fsvel = port_jnt_vel_in_.readNewest(eigRobotState_.jointVel);
             RTT::FlowStatus fswtb = port_world_to_base_in_.readNewest(world_to_base_in_);
             RTT::FlowStatus fsbve = port_base_vel_in_.readNewest(base_vel_in_);
             RTT::FlowStatus fsgra = port_gravity_in_.readNewest(gravity_in_);
             
             if(fsgra == RTT::NewData)
-                robot_data_helper_.eigRobotState.gravity = gravity_in_.head<3>();
+                eigRobotState_.gravity = gravity_in_.head<3>();
                 
             if(fsbve == RTT::NewData)
-                robot_data_helper_.eigRobotState.baseVel = base_vel_in_.head<6>();
+                eigRobotState_.baseVel = base_vel_in_.head<6>();
                 
             if(fswtb == RTT::NewData)
-                robot_data_helper_.eigRobotState.world_H_base = world_to_base_in_.block<4,4>(0,0);
+                eigRobotState_.world_H_base = world_to_base_in_.block<4,4>(0,0);
             
             if(fspos == RTT::NoData || fsvel == RTT::NoData)
             {
@@ -139,11 +139,11 @@ namespace common
             && fsbve != RTT::NoData
             && fsgra != RTT::NoData)
             {
-                robot_.setRobotState(robot_data_helper_.eigRobotState.world_H_base
-                            ,robot_data_helper_.eigRobotState.jointPos
-                            ,robot_data_helper_.eigRobotState.baseVel
-                            ,robot_data_helper_.eigRobotState.jointVel
-                            ,robot_data_helper_.eigRobotState.gravity
+                robot_.setRobotState(eigRobotState_.world_H_base
+                            ,eigRobotState_.jointPos
+                            ,eigRobotState_.baseVel
+                            ,eigRobotState_.jointVel
+                            ,eigRobotState_.gravity
                                                     );
                 return true;
             }
@@ -154,8 +154,8 @@ namespace common
             && fsbve == RTT::NoData
             && fsgra == RTT::NoData)
             {
-                robot_.setRobotState(robot_data_helper_.eigRobotState.jointPos
-                            ,robot_data_helper_.eigRobotState.jointVel);
+                robot_.setRobotState(eigRobotState_.jointPos
+                            ,eigRobotState_.jointVel);
                 return true;
             }
             
@@ -165,9 +165,9 @@ namespace common
             && fsbve == RTT::NoData
             && fsgra != RTT::NoData)
             {
-                robot_.setRobotState(robot_data_helper_.eigRobotState.jointPos
-                            ,robot_data_helper_.eigRobotState.jointVel
-                            ,robot_data_helper_.eigRobotState.gravity);
+                robot_.setRobotState(eigRobotState_.jointPos
+                            ,eigRobotState_.jointVel
+                            ,eigRobotState_.gravity);
                 return true;
             }
             
@@ -182,7 +182,7 @@ namespace common
         bool loadRobotModel(const std::string& file_url)
         {
             if(comm_.loadRobotModel(file_url))
-                robot_data_helper_.resize(robot_.getRobotModel());
+                eigRobotState_.resize(robot_.getNrOfDegreesOfFreedom());
             else
                 throw std::runtime_error("Could not load robot model");
             return true;
@@ -200,7 +200,7 @@ namespace common
         Eigen::MatrixXd world_to_base_in_;
         
         orca::robot::RobotDynTree& robot_;
-        orca::robot::RobotDataHelper robot_data_helper_;
+        orca::robot::EigenRobotState eigRobotState_;
         orca::common::TaskCommon& comm_;
     };
 } // namespace common
