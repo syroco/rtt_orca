@@ -7,8 +7,8 @@ env:
     - ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
     - UPSTREAM_WORKSPACE=file
   matrix:
-    - ROS_DISTRO="indigo" BEFORE_SCRIPT="apt update ; apt install cmake3"
-    - ROS_DISTRO="jade" BEFORE_SCRIPT="apt update ; apt install cmake3"
+    - ROS_DISTRO="indigo" BEFORE_SCRIPT="apt update ; apt install -y cmake3"
+    - ROS_DISTRO="jade" BEFORE_SCRIPT="apt update ; apt install -y cmake3"
     - ROS_DISTRO="kinetic"
 
 install:
