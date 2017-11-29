@@ -25,6 +25,7 @@ namespace common
         RttTaskCommon(RTT::TaskContext* owner,orca::common::TaskCommon* comm,const std::string& name)
         : RTT::TaskContext(name)
         , robot_(comm->robot())
+        , owner_(owner)
         , comm_(*comm)
         {
             comm->setName(name);
@@ -43,6 +44,7 @@ namespace common
             owner->addOperation("activate",&orca::common::TaskCommon::activate,comm,RTT::OwnThread);
             owner->addOperation("isActivated",&orca::common::TaskCommon::isActivated,comm,RTT::OwnThread);
             owner->addOperation("insertInProblem",&orca::common::TaskCommon::insertInProblem,comm,RTT::OwnThread);
+            owner->addOperation("insertInProblemWhenReady",&RttTaskCommon::insertInProblemWhenReady,this,RTT::ClientThread);
             owner->addOperation("removeFromProblem",&orca::common::TaskCommon::removeFromProblem,comm,RTT::OwnThread);
             owner->addOperation("isInsertedInProblem",&orca::common::TaskCommon::isInsertedInProblem,comm,RTT::OwnThread);
             owner->addOperation("isInitialized",&orca::common::TaskCommon::isInitialized,comm,RTT::OwnThread);
@@ -56,6 +58,17 @@ namespace common
             world_to_base_in_.resize(4,4);
             world_to_base_in_.setIdentity();
         }
+
+        bool insertInProblemWhenReady()
+        {
+            if(!comm_.isInitialized())
+            {
+                RTT::log(RTT::Info) << "[" << getName() << "] " << " Waiting for initialization" << RTT::endlog();
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+            
+        }
+
 
         bool connectToRobot(const std::string& robot_comp)
         {
@@ -202,6 +215,7 @@ namespace common
         orca::robot::RobotDynTree& robot_;
         orca::robot::EigenRobotState eigRobotState_;
         orca::common::TaskCommon& comm_;
+        RTT::TaskContext * owner_;
     };
 } // namespace common
 } // namespace rtt_orca
