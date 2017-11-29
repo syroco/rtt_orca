@@ -1,0 +1,3 @@
+- git: {local-name: rtt, uri: 'https://github.com/orocos/rtt.git',version: toolchain-2.9}
+- git: {local-name: ocl, uri: 'https://github.com/orocos/ocl.git',version: toolchain-2.9}
+- git: {local-name: catkin, uri: 'https://github.com/ros/catkin.git'}
