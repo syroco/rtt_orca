@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.1.0)
 project(rtt_orca)
 
+find_package(catkin QUIET)
 find_package(orca REQUIRED)
 find_package(OROCOS-RTT REQUIRED ${RTT_HINTS})
 
