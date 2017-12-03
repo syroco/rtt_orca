@@ -51,12 +51,6 @@ namespace common
             owner->addOperation("connectToRobot",&RttTaskCommon::connectToRobot,this,RTT::OwnThread);
             
             owner->addOperation("print",&orca::common::TaskCommon::print,comm,RTT::OwnThread);
-            
-            // Waiting for OROCOS to support fixed size vectors
-            gravity_in_.setZero(3);
-            base_vel_in_.setZero(6);
-            world_to_base_in_.resize(4,4);
-            world_to_base_in_.setIdentity();
         }
 
         bool insertInProblemWhenReady()
@@ -91,24 +85,38 @@ namespace common
 
             auto port = pr->getPort("JointPosition");
             if(port)
+            {
                 port_jnt_pos_in_.connectTo(port);
+                RTT::log(RTT::Info) << "[" << getName() << "] " << port->getName() << " is " << (port->connected() ? "connected":"not connected") << RTT::endlog();
+            }
             
             port = pr->getPort("JointVelocity");
             if(port)
+            {
                 port_jnt_vel_in_.connectTo(port);
+                RTT::log(RTT::Info) << "[" << getName() << "] " << port->getName() << " is " << (port->connected() ? "connected":"not connected") << RTT::endlog();
+            }
             
             port = pr->getPort("WorldToBase");
             if(port)
+            {
                 port_jnt_vel_in_.connectTo(port);
+                RTT::log(RTT::Info) << "[" << getName() << "] " << port->getName() << " is " << (port->connected() ? "connected":"not connected") << RTT::endlog();
+            }
             
             port = pr->getPort("BaseVelocity");
             if(port)
+            {
                 port_jnt_vel_in_.connectTo(port);
+                RTT::log(RTT::Info) << "[" << getName() << "] " << port->getName() << " is " << (port->connected() ? "connected":"not connected") << RTT::endlog();
+            }
             
             port = pr->getPort("Gravity");
             if(port)
+            {
                 port_jnt_vel_in_.connectTo(port);
-
+                RTT::log(RTT::Info) << "[" << getName() << "] " << port->getName() << " is " << (port->connected() ? "connected":"not connected") << RTT::endlog();
+            }
             return true;
         }
         
@@ -128,19 +136,10 @@ namespace common
         {
             RTT::FlowStatus fspos = port_jnt_pos_in_.readNewest(eigRobotState_.jointPos);
             RTT::FlowStatus fsvel = port_jnt_vel_in_.readNewest(eigRobotState_.jointVel);
-            RTT::FlowStatus fswtb = port_world_to_base_in_.readNewest(world_to_base_in_);
-            RTT::FlowStatus fsbve = port_base_vel_in_.readNewest(base_vel_in_);
-            RTT::FlowStatus fsgra = port_gravity_in_.readNewest(gravity_in_);
-            
-            if(fsgra == RTT::NewData)
-                eigRobotState_.gravity = gravity_in_.head<3>();
-                
-            if(fsbve == RTT::NewData)
-                eigRobotState_.baseVel = base_vel_in_.head<6>();
-                
-            if(fswtb == RTT::NewData)
-                eigRobotState_.world_H_base = world_to_base_in_.block<4,4>(0,0);
-            
+            RTT::FlowStatus fswtb = port_world_to_base_in_.readNewest(eigRobotState_.world_H_base);
+            RTT::FlowStatus fsbve = port_base_vel_in_.readNewest(eigRobotState_.baseVel);
+            RTT::FlowStatus fsgra = port_gravity_in_.readNewest(eigRobotState_.gravity);
+
             if(fspos == RTT::NoData || fsvel == RTT::NoData)
             {
                 return false;
@@ -204,13 +203,13 @@ namespace common
     private:
         RTT::InputPort<Eigen::VectorXd> port_jnt_pos_in_;
         RTT::InputPort<Eigen::VectorXd> port_jnt_vel_in_;
-        RTT::InputPort<Eigen::MatrixXd> port_world_to_base_in_;
-        RTT::InputPort<Eigen::VectorXd> port_base_vel_in_;
-        RTT::InputPort<Eigen::VectorXd> port_gravity_in_;
+        RTT::InputPort<Eigen::Matrix4d > port_world_to_base_in_;
+        RTT::InputPort<Eigen::Matrix<double,6,1> > port_base_vel_in_;
+        RTT::InputPort<Eigen::Vector3d> port_gravity_in_;
         
-        Eigen::VectorXd gravity_in_;
-        Eigen::VectorXd base_vel_in_;
-        Eigen::MatrixXd world_to_base_in_;
+        Eigen::Vector3d gravity_in_;
+        Eigen::Matrix<double,6,1> base_vel_in_;
+        Eigen::Matrix4d world_to_base_in_;
         
         orca::robot::RobotDynTree& robot_;
         orca::robot::EigenRobotState eigRobotState_;
