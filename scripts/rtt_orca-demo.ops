@@ -19,5 +19,8 @@ setActivity("orca_demo",0.001,20,ORO_SCHED_OTHER)
 connectStandardPorts("orca_demo",getRobotName(),ConnPolicy())
 
 
+// stream("orca_demo.robot_state",ros.comm.topic("lwr/robot_state"))
+
+
 configureComponent("orca_demo")
 startComponent("orca_demo")
