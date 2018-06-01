@@ -19,7 +19,6 @@ public:
 OrcaDemo(const std::string& name)
 : TaskContext(name)
 {
-    this->addProperty("robot_name",robot_name_);
     this->addProperty("base_frame",base_frame_);
     this->addProperty("robot_description",robot_description_);
     this->addProperty("controller_name",controller_name_);
@@ -27,8 +26,6 @@ OrcaDemo(const std::string& name)
 
     this->addProperty("joint_torque_max",joint_torque_max_);
     this->addProperty("joint_velocity_max",joint_velocity_max_);
-
-
 
     this->addPort("JointPosition",port_joint_position_in_).doc("Current joint positions");
     this->addPort("JointVelocity",port_joint_velocity_in_).doc("Current joint velocities");
@@ -38,22 +35,37 @@ OrcaDemo(const std::string& name)
 
 bool configureHook()
 {
+    std::cout << "robot_description_ " << robot_description_ << '\n';
+    std::cout << "joint_torque_max_ " << joint_torque_max_ << '\n';
+    std::cout << "joint_velocity_max_ " << joint_velocity_max_ << '\n';
+    std::cout << "base_frame_ " << base_frame_ << '\n';
     // Create the robot model
     robot_kinematics_ = std::make_shared<orca::robot::RobotDynTree>();
     // Load the urdf file
-    robot_kinematics_->loadModelFromString(robot_description_);
+    // robot_kinematics_->loadModelFromString(robot_description_);
+    robot_kinematics_->loadModelFromFile("/home/hoarau/orca/examples/lwr.urdf");
+    robot_kinematics_->print();
+
     // Set the base frame (for lwr its usually link_0)
     robot_kinematics_->setBaseFrame(base_frame_);
 
     const int ndof = robot_kinematics_->getNrOfDegreesOfFreedom();
 
     // Instanciate and ORCA Controller
-    controller_ = std::make_shared<Controller>(
+    std::cout << "Robot is loaded, loading controller" <<'\n';
+
+    auto robot_kinematics = std::make_shared<orca::robot::RobotDynTree>();
+    robot_kinematics->loadModelFromFile("/home/hoarau/orca/examples/lwr.urdf");
+    robot_kinematics->setBaseFrame(base_frame_);
+
+    auto controller = std::make_shared<Controller>(
          controller_name_
-        ,robot_kinematics_
+        ,robot_kinematics
         ,ResolutionStrategy::OneLevelWeighted
         ,QPSolver::qpOASES
     );
+
+    std::cout << "Controller is loaded" <<'\n';
     // Remve gravity from solution because lwr auto compensates gravity
     controller_->removeGravityTorquesFromSolution(robot_compensates_gravity_);
 
@@ -104,6 +116,7 @@ bool configureHook()
 
     // The joint torque limit constraint
     joint_torque_constraint_ = controller_->addConstraint<JointTorqueLimitConstraint>("JointTorqueLimit");
+
     joint_torque_constraint_->setLimits(-joint_torque_max_,joint_torque_max_);
 
     // Joint position limits are automatically extracted from the URDF model. Note that you can set them if you want. by simply doing jnt_pos_cstr->setLimits(jntPosMin,jntPosMax).
@@ -167,10 +180,9 @@ void updateHook()
 
 
 private:
-    std::string robot_name_;
     std::string robot_description_;
     std::string base_frame_;
-    std::string controller_name_;
+    std::string controller_name_ = "orca_controller";
     bool robot_compensates_gravity_ = true;
     std::shared_ptr<orca::robot::RobotDynTree> robot_kinematics_;
     std::shared_ptr<orca::optim::Controller> controller_;
