@@ -1,0 +1,20 @@
+import("rtt_rospack")
+runScript(ros.find("lwr_utils")+"/scripts/utils.ops")
+import("rtt_rosparam")
+loadService("Deployer","rosparam")
+loadRobot(getRobotName(),isSim(),true)
+loadStatePublisher(true)
+
+ros.import("rtt_orca")
+loadComponent("orca_demo","OrcaDemo")
+
+
+ rosparam.getString("/robot_description",orca_demo.robot_description)
+
+
+setActivity("orca_demo",0.001,20,ORO_SCHED_RT)
+connectStandardPorts("orca_demo",getRobotName(),ConnPolicy())
+
+
+configureComponent("orca_demo")
+startComponent("orca_demo")

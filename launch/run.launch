@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>
+  <!--============ LWR Runner script Params ========-->
+
+  <!-- The end effector frame (you'll be able to use frames <= tip_link for cartesian position, jacobians etc.) -->
+  <arg name="tip_link" default="ati_link"/>
+  <!-- The root_link will be frame used for sending goals to the cartesian controller -->
+  <arg name="root_link" default="base_link"/>
+  <!-- Run Simulated robot (need to 'roslaunch rtt_lwr_gazebo lwr_gazebo.launch' first) -->
+  <arg name="sim" default="false" />
+  <!-- Run in GDB -->
+  <arg name="debug" default="false" />
+  <!-- Launch rviz -->
+  <arg name="rviz" default="false" />
+  <!-- The level of verbose (never, fatal, critical, error, warning, info, debug, realtime) -->
+  <arg name="log_level" default="error" />
+  <!-- Tools -->
+  <arg name="load_base" default="true" />
+  <arg name="load_table" default="true" />
+  <arg name="load_ati_sensor" default="true" />
+  <arg name="load_handle" default="true" />
+  <arg name="load_calib_tool" default="false" />
+  <!-- Gazebo -->
+  <arg name="gazebo_gui" default="false"/>
+
+  <rosparam ns="Deployer" subst_value="true">
+    spinner_threads : 20
+  </rosparam>
+
+    <!--============ CartOptCtrl Params ============-->
+    <rosparam ns="CartOptCtrl" subst_value="true">
+      torque_max : [160.0, 160.0, 90.0, 90.0, 90.0, 35.0, 35.0]
+      joint_vel_max : [1.8, 1.8, 2.0, 2.0, 3.5, 3.0, 3.0]
+      p_gains : [1080.0, 1080.0, 1080.0, 1080.0, 1080.0, 1080.0]
+      i_gains : [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      d_gains : [20.0, 20.0, 20.0, 20.0, 20.0, 20.0]
+      position_saturation : 0.01
+      orientation_saturation : 0.0314
+      integral_pos_saturation : 0.0
+      integral_rot_saturation : 0.0
+      ec_max : 1.0
+      ec_safe : 0.05
+      human_min_dist : 0.25
+      human_max_dist : 2.8
+      regularisation_weight : 0.000001
+      compensate_gravity : true
+      viscous_walls : true
+      max_viscous_coeff : 150
+      viscous_walls_thickness : 0.3
+      damping_weight : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+      cart_min_constraints : [-0.6, -0.25, 0.15]
+      cart_max_constraints : [0.9, 0.5, 0.8]
+      horizon_steps : 15
+      base_frame : "$(arg root_link)"
+      frame_of_interest : "ati_link"
+      select_components_0 : [1,1,1,1,1,1]
+      select_axes_0 : [1,1,1,1,1,1,1]
+      select_components_1 : [0,0,0,0,0,0]
+      select_axes_1 : [0,0,0,0,0,0,0]
+      select_components_2 : [0,0,0,0,0,0]
+      select_axes_2 : [0,0,0,0,0,0,0]
+      select_components_3 : [0,0,0,0,0,0]
+      select_axes_3 : [0,0,0,0,0,0,0]
+      select_components_4 : [0,0,0,0,0,0]
+      select_axes_4 : [0,0,0,0,0,0,0]
+      select_components_5 : [0,0,0,0,0,0]
+      select_axes_5 : [0,0,0,0,0,0,0]
+    </rosparam>
+
+  <!--============ LWR Runner script ===============-->
+
+  <include file="$(find lwr_utils)/launch/run.launch">
+    <arg name="sim" value="$(arg sim)" />
+    <arg name="ops_script" value="$(find rtt_orca)/scripts/rtt_orca-demo.ops"/>
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="rviz" value="$(arg rviz)" />
+    <arg name="log_level" value="$(arg log_level)" />
+    <arg name="tip_link" value="$(arg tip_link)"/>
+    <arg name="root_link" value="$(arg root_link)"/>
+    <arg name="load_base" value="$(arg load_base)" />
+    <arg name="load_table" value="$(arg load_table)" />
+    <arg name="load_ati_sensor" value="$(arg load_ati_sensor)" />
+    <arg name="load_calib_tool" value="$(arg load_calib_tool)" />
+    <arg name="load_handle" value="$(arg load_handle)" />
+    <arg name="gazebo_gui" value="$(arg gazebo_gui)"/>
+  </include>
+
+</launch>
