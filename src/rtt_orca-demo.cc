@@ -35,6 +35,9 @@ OrcaDemo(const std::string& name)
 
 bool configureHook()
 {
+    // int argc = 1;
+    // char *argv[] = "poop";
+    // ros::init(argc, argv);
     std::cout << "robot_description_ " << robot_description_ << '\n';
     std::cout << "joint_torque_max_ " << joint_torque_max_ << '\n';
     std::cout << "joint_velocity_max_ " << joint_velocity_max_ << '\n';
@@ -125,9 +128,22 @@ bool configureHook()
 
     controller_->globalRegularization()->euclidianNorm().setWeight(1.e-8);
 
-    //RosGazeboModel gzrobot_ros_wrapper(gzrobot,robot_kinematics);
-    //RosController controller_ros_wrapper(robot_name, controller); // TODO: take robot_kinematics
-    //RosCartesianTask cart_task_ros_wrapper(robot_name, controller_->getName(), cart_task); // TODO: take robot_kinematics
+    controller_ros_wrapper_ = std::make_shared<orca_ros::optim::RosController>(robot_kinematics_->getName(), controller_);
+    cart_task_ros_wrapper_ = std::make_shared<orca_ros::task::RosCartesianTask>(robot_kinematics_->getName(), controller_->getName(), cart_task_);
+    robot_ros_wrapper_ = std::make_shared<orca_ros::robot::RosRobotDynTree>(robot_kinematics_);
+
+    // state_msg_.robot_name
+    // state_msg_.world_to_base_transform
+    // state_msg_.base_velocity =
+    // state_msg_.base_name = robot_kinematics_->getBaseFrame();
+    // state_msg_.joint_names = robot_kinematics_->getJointNames();
+    // // state_msg_.gravity =
+    // state_msg_.joint_positions
+    // state_msg_.joint_velocities
+    // state_msg_.joint_external_torques
+    // state_msg_.joint_measured_torques
+
+
     return true;
 }
 
@@ -173,6 +189,7 @@ void updateHook()
         this->error();
         return;
     }
+    ros::spinOnce();
 }
 
 
@@ -188,6 +205,9 @@ private:
     std::shared_ptr<orca::constraint::JointTorqueLimitConstraint> joint_torque_constraint_;
     std::shared_ptr<orca::constraint::JointPositionLimitConstraint> joint_position_constraint_;
     std::shared_ptr<orca::constraint::JointVelocityLimitConstraint> joint_velocity_constraint_;
+    std::shared_ptr<orca_ros::optim::RosController> controller_ros_wrapper_;
+    std::shared_ptr<orca_ros::task::RosCartesianTask> cart_task_ros_wrapper_;
+    std::shared_ptr<orca_ros::robot::RosRobotDynTree> robot_ros_wrapper_;
 
     Eigen::VectorXd joint_torque_max_;
     Eigen::VectorXd joint_velocity_max_;
@@ -195,6 +215,9 @@ private:
     RTT::InputPort<Eigen::VectorXd> port_joint_position_in_;
     RTT::InputPort<Eigen::VectorXd> port_joint_velocity_in_;
     RTT::OutputPort<Eigen::VectorXd> port_joint_torque_out_;
+
+    orca_ros::RobotState state_msg_;
+    RTT::OutputPort<orca_ros::RobotState> port_state_;
 
     Eigen::VectorXd joint_torque_out_,
                     joint_position_in_,
