@@ -15,8 +15,7 @@ orca_demo.max_n_missed = 40
 connectStandardPorts("orca_demo",getRobotName(),ConnPolicy())
 
 stream("orca_demo.robot_state",ros.comm.topic("/orca/lwr/robot_state"))
-stream("orca_demo.robot_state",ros.comm.topic("/orca/lwr/joint_torque_command"))
-
+//stream("orca_demo.JointTorqueCommandFromROS",ros.comm.topic("/orca/lwr/joint_torque_command"))
 
 configureComponent("orca_demo")
 startComponent("orca_demo")

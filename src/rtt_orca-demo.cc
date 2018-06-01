@@ -25,6 +25,7 @@ OrcaDemo(const std::string& name)
     this->addPort("JointPosition",port_joint_position_in_).doc("Current joint positions");
     this->addPort("JointVelocity",port_joint_velocity_in_).doc("Current joint velocities");
     this->addPort("JointTorqueCommand",port_joint_torque_out_).doc("Command joint torques");
+    this->addPort("robot_state",port_state_msg_).doc("Command joint torques from ROS");
     this->addPort("JointTorqueCommandFromROS",port_jnt_trq_cmd_).doc("Command joint torques from ROS");
 
 }
@@ -92,6 +93,17 @@ void updateHook()
 
     //Eigen::VectorXd::Map(state_msg_.joint_external_torques.data(),state_msg_.joint_external_torques.size()) = gz_model_->getJointExternalTorques();
     //Eigen::VectorXd::Map(state_msg_.joint_measured_torques.data(),state_msg_.joint_measured_torques.size()) = gz_model_->getJointMeasuredTorques();
+
+    if(state_msg_.joint_positions.size() != joint_position_in_.size())
+    {
+        state_msg_.joint_positions.resize(joint_position_in_.size());
+    }
+
+    if(state_msg_.joint_velocities.size() != joint_velocity_in_.size())
+    {
+        state_msg_.joint_velocities.resize(joint_velocity_in_.size());
+    }
+
     Eigen::VectorXd::Map(state_msg_.joint_positions.data(),state_msg_.joint_positions.size()) = joint_position_in_;
     Eigen::VectorXd::Map(state_msg_.joint_velocities.data(),state_msg_.joint_velocities.size()) = joint_velocity_in_;
 
