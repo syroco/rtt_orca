@@ -49,7 +49,6 @@ bool configureHook()
 
 bool startHook()
 {
-    controller_->activateTasksAndConstraints();
 }
 
 void updateHook()
@@ -65,6 +64,22 @@ void updateHook()
       //log(RTT::Error) << "Robot ports empty !" << endlog();
       return;
     }
+    
+    if(state_msg_.joint_positions.size() != joint_position_in_.size())
+    {
+        state_msg_.joint_positions.resize(joint_position_in_.size());
+    }
+
+    if(state_msg_.joint_velocities.size() != joint_velocity_in_.size())
+    {
+        state_msg_.joint_velocities.resize(joint_velocity_in_.size());
+    }
+
+    Eigen::VectorXd::Map(state_msg_.joint_positions.data(),state_msg_.joint_positions.size()) = joint_position_in_;
+    Eigen::VectorXd::Map(state_msg_.joint_velocities.data(),state_msg_.joint_velocities.size()) = joint_velocity_in_;
+
+    state_msg_.header.stamp = rtt_rosclock::host_now();
+    port_state_msg_.write( state_msg_ );
 
     RTT::FlowStatus ft = port_jnt_trq_cmd_.read(jnt_trq_cmd_);
     if(ft == RTT::NoData)
@@ -94,40 +109,11 @@ void updateHook()
     //Eigen::VectorXd::Map(state_msg_.joint_external_torques.data(),state_msg_.joint_external_torques.size()) = gz_model_->getJointExternalTorques();
     //Eigen::VectorXd::Map(state_msg_.joint_measured_torques.data(),state_msg_.joint_measured_torques.size()) = gz_model_->getJointMeasuredTorques();
 
-    if(state_msg_.joint_positions.size() != joint_position_in_.size())
-    {
-        state_msg_.joint_positions.resize(joint_position_in_.size());
-    }
 
-    if(state_msg_.joint_velocities.size() != joint_velocity_in_.size())
-    {
-        state_msg_.joint_velocities.resize(joint_velocity_in_.size());
-    }
-
-    Eigen::VectorXd::Map(state_msg_.joint_positions.data(),state_msg_.joint_positions.size()) = joint_position_in_;
-    Eigen::VectorXd::Map(state_msg_.joint_velocities.data(),state_msg_.joint_velocities.size()) = joint_velocity_in_;
-
-    state_msg_.header.stamp = rtt_rosclock::host_now();
-    port_state_msg_.write( state_msg_ );
 }
 
 
 private:
-    std::string robot_description_;
-    std::string base_frame_;
-    std::string controller_name_ = "orca_controller";
-    bool robot_compensates_gravity_ = true;
-    std::shared_ptr<orca::robot::RobotDynTree> robot_kinematics_;
-    std::shared_ptr<orca::optim::Controller> controller_;
-    std::shared_ptr<orca::task::JointAccelerationTask> joint_position_task_;
-    std::shared_ptr<orca::task::CartesianTask> cart_task_;
-    std::shared_ptr<orca::constraint::JointTorqueLimitConstraint> joint_torque_constraint_;
-    std::shared_ptr<orca::constraint::JointPositionLimitConstraint> joint_position_constraint_;
-    std::shared_ptr<orca::constraint::JointVelocityLimitConstraint> joint_velocity_constraint_;
-    std::shared_ptr<orca_ros::optim::RosController> controller_ros_wrapper_;
-    std::shared_ptr<orca_ros::task::RosCartesianTask> cart_task_ros_wrapper_;
-    std::shared_ptr<orca_ros::robot::RosRobotDynTree> robot_ros_wrapper_;
-
     int max_n_missed = 50;
 
     Eigen::VectorXd joint_torque_max_;
