@@ -7,19 +7,15 @@ loadStatePublisher(true)
 
 ros.import("rtt_orca")
 loadComponent("orca_demo","OrcaDemo")
-
-
- rosparam.getString("/robot_description",orca_demo.robot_description)
- rosparam.getString("root_link",orca_demo.base_frame)
- rosparam.getEigenVectorXd("orca_demo/joint_torque_max",orca_demo.joint_torque_max)
- rosparam.getEigenVectorXd("orca_demo/joint_velocity_max",orca_demo.joint_velocity_max)
-// rosparam.getString("tip_link",orca_demo.CartTask_EE.control_frame)
-
 setActivity("orca_demo",0.001,20,ORO_SCHED_OTHER)
+
+orca_demo.max_n_missed = 40
+
+
 connectStandardPorts("orca_demo",getRobotName(),ConnPolicy())
 
-
-// stream("orca_demo.robot_state",ros.comm.topic("lwr/robot_state"))
+stream("orca_demo.robot_state",ros.comm.topic("/orca/lwr/robot_state"))
+stream("orca_demo.robot_state",ros.comm.topic("/orca/lwr/joint_torque_command"))
 
 
 configureComponent("orca_demo")

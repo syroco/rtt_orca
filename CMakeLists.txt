@@ -3,7 +3,7 @@ project(rtt_orca)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-find_package(catkin REQUIRED rtt_ros orca_ros)
+find_package(catkin REQUIRED rtt_ros orca_ros rtt_roscomm rtt_rosclock)
 find_package(orca REQUIRED)
 # find_package(OROCOS-RTT REQUIRED ${RTT_HINTS})
 
@@ -11,6 +11,10 @@ find_package(orca REQUIRED)
 
 # orocos_use_package(ocl-taskbrowser)
 # orocos_use_package(ocl-deployment)
+
+ros_generate_rtt_typekit(orca_ros)
+ros_generate_rtt_service_proxies(orca_ros)
+
 
 include_directories(
     include

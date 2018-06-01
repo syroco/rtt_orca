@@ -13,6 +13,7 @@
   <depend>rtt</depend>
   <depend>rtt_ros</depend>
   <depend>rtt_roscomm</depend>
+  <depend>rtt_rosclock</depend>
   <depend>orca</depend>
   <depend>orca_ros</depend>
 
