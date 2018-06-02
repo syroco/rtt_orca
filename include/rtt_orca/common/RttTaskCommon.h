@@ -212,7 +212,7 @@ namespace common
         Eigen::Matrix4d world_to_base_in_;
         
         orca::robot::RobotDynTree& robot_;
-        orca::robot::EigenRobotState eigRobotState_;
+        orca::robot::RobotState eigRobotState_;
         orca::common::TaskCommon& comm_;
         RTT::TaskContext * owner_;
     };
