@@ -16,8 +16,11 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
 )
 
-orocos_component(rtt_orca-demo src/rtt_orca-demo.cc)
-target_link_libraries(rtt_orca-demo ${catkin_LIBRARIES} orca::orca)
+orocos_component(joint_torque_streamer src/joint_torque_streamer.cc)
+target_link_libraries(joint_torque_streamer ${catkin_LIBRARIES} orca::orca)
+
+orocos_component(cart_task_demo src/cart_task_demo.cc)
+target_link_libraries(cart_task_demo ${catkin_LIBRARIES} orca::orca)
 #
 # install(FILES scripts/rtt_orca-demo.ops DESTINATION lib/rtt_orca
 #     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ

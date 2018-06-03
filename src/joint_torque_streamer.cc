@@ -15,10 +15,10 @@ using namespace orca_ros::all;
 using namespace RTT;
 using namespace RTT::os;
 
-class OrcaDemo : public RTT::TaskContext
+class JointTorqueStreamer : public RTT::TaskContext
 {
 public:
-OrcaDemo(const std::string& name)
+JointTorqueStreamer(const std::string& name)
 : TaskContext(name)
 {
     this->addProperty("max_n_missed",max_n_missed);
@@ -64,7 +64,7 @@ void updateHook()
       //log(RTT::Error) << "Robot ports empty !" << endlog();
       return;
     }
-    
+
     if(state_msg_.joint_positions.size() != joint_position_in_.size())
     {
         state_msg_.joint_positions.resize(joint_position_in_.size());
@@ -134,4 +134,4 @@ private:
                     joint_velocity_in_;
 };
 
-ORO_CREATE_COMPONENT(OrcaDemo)
+ORO_CREATE_COMPONENT(JointTorqueStreamer)

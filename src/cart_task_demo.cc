@@ -13,10 +13,10 @@ using namespace orca_ros::all;
 using namespace RTT;
 using namespace RTT::os;
 
-class OrcaDemo : public RTT::TaskContext
+class CartTaskDemo : public RTT::TaskContext
 {
 public:
-OrcaDemo(const std::string& name)
+CartTaskDemo(const std::string& name)
 : TaskContext(name)
 {
     this->addProperty("base_frame",base_frame_);
@@ -204,4 +204,4 @@ private:
                     joint_velocity_in_;
 };
 
-ORO_CREATE_COMPONENT(OrcaDemo)
+ORO_CREATE_COMPONENT(CartTaskDemo)

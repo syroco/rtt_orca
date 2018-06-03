@@ -1,0 +1,21 @@
+import("rtt_rospack")
+runScript(ros.find("lwr_utils")+"/scripts/utils.ops")
+import("rtt_rosparam")
+loadService("Deployer","rosparam")
+loadRobot(getRobotName(),isSim(),true)
+loadStatePublisher(true)
+
+ros.import("rtt_orca")
+loadComponent("joint_torque_streamer","JointTorqueStreamer")
+setActivity("joint_torque_streamer",0.001,20,ORO_SCHED_OTHER)
+
+joint_torque_streamer.max_n_missed = 40
+
+
+connectStandardPorts("joint_torque_streamer",getRobotName(),ConnPolicy())
+
+stream("joint_torque_streamer.robot_state",ros.comm.topic("/orca/lwr/robot_state"))
+//stream("joint_torque_streamer.JointTorqueCommandFromROS",ros.comm.topic("/orca/lwr/joint_torque_command"))
+
+configureComponent("joint_torque_streamer")
+startComponent("joint_torque_streamer")
