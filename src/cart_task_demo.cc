@@ -44,7 +44,7 @@ bool configureHook()
     // Load the urdf file
     robot_kinematics_->loadModelFromString(robot_description_);
     robot_kinematics_->print();
-
+    std::cout << "robot_name " << robot_kinematics_->getName() << '\n';
     // Set the base frame (for lwr its usually link_0)
     robot_kinematics_->setBaseFrame(base_frame_);
 
@@ -123,9 +123,8 @@ bool configureHook()
 
     controller_->globalRegularization()->euclidianNorm().setWeight(1.e-8);
 
-    //RosGazeboModel gzrobot_ros_wrapper(gzrobot,robot_kinematics);
-    //RosController controller_ros_wrapper(robot_name, controller); // TODO: take robot_kinematics
-    //RosCartesianTask cart_task_ros_wrapper(robot_name, controller_->getName(), cart_task); // TODO: take robot_kinematics
+    // RosController controller_ros_wrapper(robot_kinematics_->getName(), controller_); // TODO: take robot_kinematics
+    // RosCartesianTask cart_task_ros_wrapper(robot_kinematics_->getName(), controller_->getName(), cart_task_); // TODO: take robot_kinematics
     return true;
 }
 
@@ -147,9 +146,9 @@ void updateHook()
         if(p)
         {
             p = false;
-            log(RTT::Error) << getName() << " ------> waiting for (q,dq)" << endlog();
+            log(RTT::Info) << getName() << " ------> waiting for (q,dq)" << endlog();
         }
-      //log(RTT::Error) << "Robot ports empty !" << endlog();
+      //log(RTT::Info) << "Robot ports empty !" << endlog();
       return;
     }
 
@@ -157,7 +156,7 @@ void updateHook()
     if(p)
     {
         p = false;
-        log(RTT::Error) << getName() << " ------> First (q,dq) received !" << endlog();
+        log(RTT::Info) << getName() << " ------> First (q,dq) received !" << endlog();
     }
 
     robot_kinematics_->setRobotState(this->joint_position_in_,this->joint_velocity_in_);
