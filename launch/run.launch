@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <launch>
   <!--============ LWR Runner script Params ========-->
+  <arg if="$(arg sim)"     name="robot_name" default="lwr_sim"/>
+  <arg unless="$(arg sim)" name="robot_name" default="lwr"/>
+  <arg name="task_name"  default="CartTask_EE"/>
 
   <!-- The end effector frame (you'll be able to use frames <= tip_link for cartesian position, jacobians etc.) -->
   <arg name="tip_link" default="ati_link"/>
   <!-- The root_link will be frame used for sending goals to the cartesian controller -->
   <arg name="root_link" default="base_link"/>
+  <arg name="interactive_marker_frame_id"  default="$(arg root_link)"/>
   <!-- Run Simulated robot (need to 'roslaunch rtt_lwr_gazebo lwr_gazebo.launch' first) -->
   <arg name="sim" default="false" />
   <!-- Run in GDB -->
@@ -52,5 +56,15 @@
     <arg name="load_handle" value="$(arg load_handle)" />
     <arg name="gazebo_gui" value="$(arg gazebo_gui)"/>
   </include>
+
+
+  <node name="rviz_task_controller" pkg="orca_ros" type="rviz_task_controller" output="screen">
+      <param name="robot_name" value="$(arg robot_name)"/>
+      <param name="controller_name" value="orca_controller"/>
+      <param name="task_name" value="$(arg task_name)"/>
+      <param name="interactive_marker_frame_id" value="$(arg interactive_marker_frame_id)"/>
+  </node>
+
+
 
 </launch>
