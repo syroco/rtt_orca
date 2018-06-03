@@ -42,8 +42,7 @@ bool configureHook()
     // Create the robot model
     robot_kinematics_ = std::make_shared<orca::robot::RobotDynTree>();
     // Load the urdf file
-    // robot_kinematics_->loadModelFromString(robot_description_);
-    robot_kinematics_->loadModelFromFile("/home/hoarau/orca/examples/lwr.urdf");
+    robot_kinematics_->loadModelFromString(robot_description_);
     robot_kinematics_->print();
 
     // Set the base frame (for lwr its usually link_0)
@@ -54,13 +53,9 @@ bool configureHook()
     // Instanciate and ORCA Controller
     std::cout << "Robot is loaded, loading controller" <<'\n';
 
-    auto robot_kinematics = std::make_shared<orca::robot::RobotDynTree>();
-    robot_kinematics->loadModelFromFile("/home/hoarau/orca/examples/lwr.urdf");
-    robot_kinematics->setBaseFrame(base_frame_);
-
-    auto controller = std::make_shared<Controller>(
+    controller_ = std::make_shared<Controller>(
          controller_name_
-        ,robot_kinematics
+        ,robot_kinematics_
         ,ResolutionStrategy::OneLevelWeighted
         ,QPSolver::qpOASES
     );
