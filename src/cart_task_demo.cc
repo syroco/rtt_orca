@@ -143,8 +143,21 @@ void updateHook()
     // Return if not giving anything (might happend during startup)
     if(fp == RTT::NoData || fv == RTT::NoData)
     {
+        static bool p = true;
+        if(p)
+        {
+            p = false;
+            log(RTT::Error) << getName() << " ------> waiting for (q,dq)" << endlog();
+        }
       //log(RTT::Error) << "Robot ports empty !" << endlog();
       return;
+    }
+
+    static bool p = true;
+    if(p)
+    {
+        p = false;
+        log(RTT::Error) << getName() << " ------> First (q,dq) received !" << endlog();
     }
 
     robot_kinematics_->setRobotState(this->joint_position_in_,this->joint_velocity_in_);
