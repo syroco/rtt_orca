@@ -6,7 +6,7 @@ loadRobot(getRobotName(),isSim(),true)
 loadStatePublisher(true)
 
 ros.import("rtt_orca")
-loadComponent("cart_task_demo","cartTaskDemo")
+loadComponent("cart_task_demo","CartTaskDemo")
 setActivity("cart_task_demo",0.001,20,ORO_SCHED_OTHER)
 
 rosparam.getString("/robot_description",cart_task_demo.robot_description)
