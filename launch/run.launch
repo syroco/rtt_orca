@@ -3,13 +3,11 @@
   <!--============ LWR Runner script Params ========-->
   <arg if="$(arg sim)"     name="robot_name" default="lwr_sim"/>
   <arg unless="$(arg sim)" name="robot_name" default="lwr"/>
-  <arg name="task_name"  default="CartTask_EE"/>
 
   <!-- The end effector frame (you'll be able to use frames <= tip_link for cartesian position, jacobians etc.) -->
   <arg name="tip_link" default="ati_link"/>
   <!-- The root_link will be frame used for sending goals to the cartesian controller -->
   <arg name="root_link" default="base_link"/>
-  <arg name="interactive_marker_frame_id"  default="$(arg root_link)"/>
   <!-- Run Simulated robot (need to 'roslaunch rtt_lwr_gazebo lwr_gazebo.launch' first) -->
   <arg name="sim" default="false" />
   <!-- Run in GDB -->
@@ -34,11 +32,30 @@
   </rosparam>
 
     <!--============ CartOptCtrl Params ============-->
-    <rosparam ns="orca_demo" subst_value="true">
+    <rosparam ns="/orca/$(arg robot_name)/orca_controller/JointTorqueLimit" subst_value="true">
       joint_torque_max : [160.0, 160.0, 90.0, 90.0, 90.0, 35.0, 35.0]
       joint_velocity_max : [1.8, 1.8, 2.0, 2.0, 3.5, 3.0, 3.0]
     </rosparam>
-
+    
+  
+    <rosparam ns="/orca/$(arg robot_name)/orca_controller" subst_value="true">
+      robot_compensates_gravity: true
+    </rosparam>
+    
+    <rosparam ns="/orca/$(arg robot_name)/orca_controller/CartTask_EE" subst_value="true">
+      base_frame: $(arg root_link)
+      control_frame: $(arg tip_link)
+    </rosparam>
+    
+    <node name="rviz_task_controller" pkg="orca_ros" type="rviz_task_controller" output="screen">
+        <rosparam subst_value="true">
+            robot_name: $(arg robot_name)
+            controller_name: orca_controller
+            task_name: CartTask_EE
+            interactive_marker_frame_id: $(arg root_link)
+        </rosparam>
+    </node>
+    
   <!--============ LWR Runner script ===============-->
 
   <include file="$(find lwr_utils)/launch/run.launch">
@@ -56,15 +73,5 @@
     <arg name="load_handle" value="$(arg load_handle)" />
     <arg name="gazebo_gui" value="$(arg gazebo_gui)"/>
   </include>
-
-
-  <node name="rviz_task_controller" pkg="orca_ros" type="rviz_task_controller" output="screen">
-      <param name="robot_name" value="$(arg robot_name)"/>
-      <param name="controller_name" value="orca_controller"/>
-      <param name="task_name" value="$(arg task_name)"/>
-      <param name="interactive_marker_frame_id" value="$(arg interactive_marker_frame_id)"/>
-  </node>
-
-
 
 </launch>
