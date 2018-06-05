@@ -33,20 +33,20 @@
 
     <!--============ CartOptCtrl Params ============-->
     <rosparam ns="/orca/$(arg robot_name)/orca_controller/JointTorqueLimit" subst_value="true">
-      joint_torque_max : [160.0, 160.0, 90.0, 90.0, 90.0, 35.0, 35.0]
-      joint_velocity_max : [1.8, 1.8, 2.0, 2.0, 3.5, 3.0, 3.0]
+      joint_torque_max : [100.0, 100.0, 90.0, 90.0, 90.0, 35.0, 35.0]
+      joint_velocity_max : [1.5, 1.5, 1.5, 1.5, 1.2, 1.2, 1.2]
     </rosparam>
-    
-  
+
+
     <rosparam ns="/orca/$(arg robot_name)/orca_controller" subst_value="true">
       robot_compensates_gravity: true
     </rosparam>
-    
+
     <rosparam ns="/orca/$(arg robot_name)/orca_controller/CartTask_EE" subst_value="true">
       base_frame: $(arg root_link)
       control_frame: $(arg tip_link)
     </rosparam>
-    
+
     <node name="rviz_task_controller" pkg="orca_ros" type="rviz_task_controller" output="screen">
         <rosparam subst_value="true">
             robot_name: $(arg robot_name)
@@ -55,7 +55,7 @@
             interactive_marker_frame_id: $(arg root_link)
         </rosparam>
     </node>
-    
+
   <!--============ LWR Runner script ===============-->
 
   <include file="$(find lwr_utils)/launch/run.launch">

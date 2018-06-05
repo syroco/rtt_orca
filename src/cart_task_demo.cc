@@ -204,7 +204,7 @@ private:
     Eigen::VectorXd joint_torque_out_,
                     joint_position_in_,
                     joint_velocity_in_;
-                    
+
     std::shared_ptr<orca_ros::optim::RosController> controller_ros_wrapper_;
     std::shared_ptr<orca_ros::task::RosCartesianTask> cart_task_ros_wrapper_;
 };
