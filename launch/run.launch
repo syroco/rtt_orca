@@ -33,7 +33,7 @@
 
     <!--============ CartOptCtrl Params ============-->
     <rosparam ns="/orca/$(arg robot_name)/orca_controller/JointTorqueLimit" subst_value="true">
-      joint_torque_max : [100.0, 100.0, 90.0, 90.0, 90.0, 35.0, 35.0]
+      joint_torque_max : [90.0, 90.0, 90.0, 90.0, 90.0, 35.0, 35.0]
       joint_velocity_max : [1.5, 1.5, 1.5, 1.5, 1.2, 1.2, 1.2]
     </rosparam>
 

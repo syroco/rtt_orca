@@ -1,0 +1,19 @@
+#!/usr/bin/env deployer
+require("print")
+import("rtt_ros")
+ros.import("rtt_orca")
+loadComponent("ros_spinner","RosSpinner")
+// setActivity("ros_spinner",0.5,10,ORO_SCHED_OTHER)
+configureComponent("ros_spinner")
+
+loadComponent("master_comp","TaskContext")
+setActivity("master_comp",0.1,50,ORO_SCHED_RT)
+connectPeers("master_comp","ros_spinner")
+
+if(setMasterSlaveActivity("master_comp","ros_spinner")) then
+{
+    print.ln("Master connected to slave ----------------")
+}
+
+configureComponent("master_comp")
+startComponent("master_comp")

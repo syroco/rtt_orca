@@ -19,17 +19,17 @@
 
     <export>
         <rtt_ros>
-            <plugin_depend>rtt_std_msgs</plugin_depend>
+            <!-- <plugin_depend>rtt_std_msgs</plugin_depend> -->
             <!-- <plugin_depend>rtt_diagnostic_msgs</plugin_depend> -->
-            <plugin_depend>rtt_geometry_msgs</plugin_depend>
+            <!-- <plugin_depend>rtt_geometry_msgs</plugin_depend> -->
             <!-- <plugin_depend>rtt_sensor_msgs</plugin_depend> -->
             <!-- <plugin_depend>kdl_typekit</plugin_depend> -->
-            <plugin_depend>eigen_typekit</plugin_depend>
-            <plugin_depend>rtt_rosclock</plugin_depend>
+            <!-- <plugin_depend>eigen_typekit</plugin_depend> -->
+            <!-- <plugin_depend>rtt_rosclock</plugin_depend> -->
             <!-- <plugin_depend>rtt_tf</plugin_depend> -->
-            <plugin_depend>rtt_rosparam</plugin_depend>
+            <!-- <plugin_depend>rtt_rosparam</plugin_depend>
             <plugin_depend>rtt_roscomm</plugin_depend>
-            <plugin_depend>rtt_rospack</plugin_depend>
+            <plugin_depend>rtt_rospack</plugin_depend> -->
             <!-- <plugin_depend>rtt_nav_msgs</plugin_depend> -->
             <!-- <plugin_depend>rtt_trajectory_msgs</plugin_depend> -->
         </rtt_ros>
