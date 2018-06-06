@@ -40,7 +40,7 @@ bool configureHook()
     std::cout << "joint_velocity_max_ " << joint_velocity_max_ << '\n';
     std::cout << "base_frame_ " << base_frame_ << '\n';
     // Create the robot model
-    robot_kinematics_ = std::make_shared<orca::robot::RobotDynTree>();
+    robot_kinematics_ = std::make_shared<orca::robot::RobotModel>();
     // Load the urdf file
     // robot_kinematics_->loadModelFromString(robot_description_);
     robot_kinematics_->loadModelFromFile("/home/hoarau/orca/examples/lwr.urdf");
@@ -54,7 +54,7 @@ bool configureHook()
     // Instanciate and ORCA Controller
     std::cout << "Robot is loaded, loading controller" <<'\n';
 
-    auto robot_kinematics = std::make_shared<orca::robot::RobotDynTree>();
+    auto robot_kinematics = std::make_shared<orca::robot::RobotModel>();
     robot_kinematics->loadModelFromFile("/home/hoarau/orca/examples/lwr.urdf");
     robot_kinematics->setBaseFrame(base_frame_);
 
@@ -184,7 +184,7 @@ private:
     std::string base_frame_;
     std::string controller_name_ = "orca_controller";
     bool robot_compensates_gravity_ = true;
-    std::shared_ptr<orca::robot::RobotDynTree> robot_kinematics_;
+    std::shared_ptr<orca::robot::RobotModel> robot_kinematics_;
     std::shared_ptr<orca::optim::Controller> controller_;
     std::shared_ptr<orca::task::JointAccelerationTask> joint_position_task_;
     std::shared_ptr<orca::task::CartesianTask> cart_task_;

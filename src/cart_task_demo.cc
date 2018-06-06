@@ -36,7 +36,7 @@ CartTaskDemo(const std::string& name)
 bool configureHook()
 {
     // Create the robot model
-    robot_kinematics_ = std::make_shared<orca::robot::RobotDynTree>(robot_name_);
+    robot_kinematics_ = std::make_shared<orca::robot::RobotModel>(robot_name_);
     // Load the urdf file
     robot_kinematics_->loadModelFromString(robot_description_);
     robot_kinematics_->print();
@@ -186,7 +186,7 @@ private:
     std::string robot_name_;
     std::string base_frame_;
     bool robot_compensates_gravity_ = true;
-    std::shared_ptr<orca::robot::RobotDynTree> robot_kinematics_;
+    std::shared_ptr<orca::robot::RobotModel> robot_kinematics_;
     std::shared_ptr<orca::optim::Controller> controller_;
     std::shared_ptr<orca::task::JointAccelerationTask> joint_position_task_;
     std::shared_ptr<orca::task::CartesianTask> cart_task_;
