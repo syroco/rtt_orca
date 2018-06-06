@@ -18,13 +18,11 @@ void loadROSService()
 	  .doc("Return ROS node namespace.");
   ros->addOperation("spinOnce", &ros::spinOnce,OwnThread)
 	  .doc("Spin once.");
-  // ros->addOperation("spin", &ros::spin,OwnThread)
-	//   .doc("Spin once.");
 }
 
 extern "C" {
   bool loadRTTPlugin(RTT::TaskContext* c){
-      return true;
+
     // TODO: Check for existing conflicting rtt_rosnode
     // RTT::Service::shared_ptr ros = RTT::internal::GlobalService::Instance()->provides("ros");
 

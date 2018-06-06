@@ -6,6 +6,7 @@
 #include <rtt/TaskContext.hpp>
 #include <rtt/InputPort.hpp>
 #include <rtt/OutputPort.hpp>
+#include <rtt/OperationCaller.hpp>
 
 using namespace orca::all;
 using namespace orca_ros::all;
@@ -18,7 +19,9 @@ class CartTaskDemo : public RTT::TaskContext
 public:
 CartTaskDemo(const std::string& name)
 : TaskContext(name)
+, spinOnce("spinOnce")
 {
+    this->requires("ros_init")->addOperationCaller(spinOnce);
     this->provides("robot")->addProperty("name",robot_name_);
     this->provides("robot")->addProperty("base_frame",base_frame_);
     this->provides("robot")->addProperty("robot_description",robot_description_);
@@ -178,10 +181,12 @@ void updateHook()
         this->error();
         return;
     }
+    spinOnce();
 }
 
 
 private:
+    RTT::OperationCaller<void(void)> spinOnce;
     std::string robot_description_;
     std::string robot_name_;
     std::string base_frame_;

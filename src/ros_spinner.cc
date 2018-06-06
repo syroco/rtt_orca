@@ -2,6 +2,7 @@
 #include <rtt/Activity.hpp>
 #include <rtt/Component.hpp>
 #include <rtt/TaskContext.hpp>
+#include <rtt/OperationCaller.hpp>
 #include <rtt/Logger.hpp>
 #include <rtt/os/startstop.h>
 
@@ -9,10 +10,15 @@ using namespace RTT;
 
 class RosSpinner : public RTT::TaskContext
 {
+private:
+    RTT::OperationCaller<void(void)> spinOnce;
 public:
 RosSpinner(const std::string& name)
 : TaskContext(name)
-{}
+, spinOnce("spinOnce")
+{
+    this->requires("ros_init")->addOperationCaller(spinOnce);
+}
 
 bool configureHook()
 {
@@ -26,9 +32,9 @@ bool configureHook()
 
 void updateHook()
 {
-    return ;
-    // std::cout << "ros::spinOnce()" << '\n';
-    ros::spinOnce();
+    std::cout << "ros::spinOnce()" << '\n';
+    //ros::spinOnce();
+    spinOnce();
 }
 
 };

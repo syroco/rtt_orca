@@ -1,17 +1,10 @@
-
-// loadComponent("ros_spinner","RosSpinner")
-// configureComponent("ros_spinner")
-// setActivity("ros_spinner",0,10,ORO_SCHED_OTHER)
-
-// setMasterSlaveActivity("cart_task_demo","ros_spinner")
-
 import("rtt_rospack")
 runScript(ros.find("lwr_utils")+"/scripts/utils.ops")
-
 
 loadRobot(getRobotName(),isSim(),true)
 loadStatePublisher(true)
 
+import("rtt_ros")
 ros.import("rtt_orca")
 loadComponent("cart_task_demo","CartTaskDemo")
 setActivity("cart_task_demo",0.001,50,ORO_SCHED_RT)
