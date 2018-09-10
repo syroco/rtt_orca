@@ -47,8 +47,8 @@ namespace optim
             
             static const int trq_idx = orca::optim::OptimisationVector().getIndex(orca::optim::ControlVariable::JointSpaceTorque);
             static const int trq_size = orca::optim::OptimisationVector().getSize(orca::optim::ControlVariable::JointSpaceTorque);
-            static const int acc_idx = orca::optim::OptimisationVector().getIndex(orca::optim::ControlVariable::JointSpaceAcceleration);
-            static const int acc_size = orca::optim::OptimisationVector().getSize(orca::optim::ControlVariable::JointSpaceAcceleration);
+            static const int acc_idx = orca::optim::OptimisationVector().getIndex(orca::optim::ControlVariable::JointAcceleration);
+            static const int acc_size = orca::optim::OptimisationVector().getSize(orca::optim::ControlVariable::JointAcceleration);
             
             timestamp_ = RTT::os::TimeService::Instance()->getTicks();
             qp_.buildOptimisationProblem();

@@ -1,0 +1,15 @@
+#!/usr/bin/env deployer
+require("print")
+import("rtt_ros")
+ros.import("rtt_orca")
+loadComponent("ros_spinner","RosSpinner")
+setPeriodicActivity("ros_spinner",0.1,50,ORO_SCHED_RT)
+// setSlaveActivity("ros_spinner",0.1)
+configureComponent("ros_spinner")
+startComponent("ros_spinner")
+
+loadComponent("master_comp","TaskContext")
+// setMasterSlaveActivity("master_comp","ros_spinner")
+
+// configureComponent("master_comp")
+// startComponent("master_comp")

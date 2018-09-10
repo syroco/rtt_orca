@@ -1,0 +1,30 @@
+import("rtt_rospack")
+runScript(ros.find("lwr_utils")+"/scripts/utils.ops")
+
+loadRobot(getRobotName(),isSim(),true)
+loadStatePublisher(true)
+
+import("rtt_ros")
+ros.import("rtt_orca")
+loadComponent("cart_task_demo","CartTaskDemo")
+setActivity("cart_task_demo",0.001,50,ORO_SCHED_RT)
+
+import("rtt_rosparam")
+loadService("Deployer","rosparam")
+
+rosparam.getString("robot_description",cart_task_demo.robot.robot_description)
+rosparam.getString("robot_name",cart_task_demo.robot.name)
+rosparam.getString("root_link",cart_task_demo.robot.base_frame)
+
+var string orca_prefix = "/orca/" + cart_task_demo.robot.name + "/orca_controller/"
+rosparam.getEigenVectorXd(orca_prefix+"JointTorqueLimit/joint_torque_max",cart_task_demo.JointTorqueLimit.joint_torque_max)
+rosparam.getEigenVectorXd(orca_prefix+"JointTorqueLimit/joint_velocity_max",cart_task_demo.JointTorqueLimit.joint_velocity_max)
+// rosparam.getString("tip_link",cart_task_demo.CartTask_EE.control_frame)
+
+connectStandardPorts("cart_task_demo",getRobotName(),ConnPolicy())
+//
+// stream("cart_task_demo.robot_state",ros.comm.topic("/orca/lwr/robot_state"))
+// stream("cart_task_demo.JointTorqueCommandFromROS",ros.comm.topic("/orca/lwr/joint_torque_command"))
+
+configureComponent("cart_task_demo")
+startComponent("cart_task_demo")

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>
+  <!--============ LWR Runner script Params ========-->
+  <arg if="$(arg sim)"     name="robot_name" default="lwr_sim"/>
+  <arg unless="$(arg sim)" name="robot_name" default="lwr"/>
+
+  <!-- The end effector frame (you'll be able to use frames <= tip_link for cartesian position, jacobians etc.) -->
+  <arg name="tip_link" default="ati_link"/>
+  <!-- The root_link will be frame used for sending goals to the cartesian controller -->
+  <arg name="root_link" default="base_link"/>
+  <!-- Run Simulated robot (need to 'roslaunch rtt_lwr_gazebo lwr_gazebo.launch' first) -->
+  <arg name="sim" default="false" />
+  <!-- Run in GDB -->
+  <arg name="debug" default="false" />
+  <!-- Launch rviz -->
+  <arg name="rviz" default="false" />
+  <!-- The level of verbose (never, fatal, critical, error, warning, info, debug, realtime) -->
+  <arg name="log_level" default="error" />
+  <!-- Tools -->
+  <arg name="load_base" default="true" />
+  <arg name="load_table" default="true" />
+  <arg name="load_ati_sensor" default="true" />
+  <arg name="load_handle" default="true" />
+  <arg name="load_calib_tool" default="false" />
+  <!-- Gazebo -->
+  <arg name="gazebo_gui" default="false"/>
+
+  <arg name="script" default="cart_task_demo"/>
+
+  <rosparam ns="Deployer" subst_value="true">
+    spinner_threads : 20
+  </rosparam>
+
+    <!--============ CartOptCtrl Params ============-->
+    <rosparam ns="/orca/$(arg robot_name)/orca_controller/JointTorqueLimit" subst_value="true">
+      joint_torque_max : [90.0, 90.0, 90.0, 90.0, 90.0, 35.0, 35.0]
+      joint_velocity_max : [1.5, 1.5, 1.5, 1.5, 1.2, 1.2, 1.2]
+    </rosparam>
+
+
+    <rosparam ns="/orca/$(arg robot_name)/orca_controller" subst_value="true">
+      robot_compensates_gravity: true
+    </rosparam>
+
+    <rosparam ns="/orca/$(arg robot_name)/orca_controller/CartTask_EE" subst_value="true">
+      base_frame: $(arg root_link)
+      control_frame: $(arg tip_link)
+    </rosparam>
+
+    <node name="rviz_task_controller" pkg="orca_ros" type="rviz_task_controller" output="screen">
+        <rosparam subst_value="true">
+            robot_name: $(arg robot_name)
+            controller_name: orca_controller
+            task_name: CartTask_EE
+            interactive_marker_frame_id: $(arg root_link)
+        </rosparam>
+    </node>
+
+  <!--============ LWR Runner script ===============-->
+
+  <include file="$(find lwr_utils)/launch/run.launch">
+    <arg name="sim" value="$(arg sim)" />
+    <arg name="ops_script" value="$(find rtt_orca)/scripts/$(arg script).ops"/>
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="rviz" value="$(arg rviz)" />
+    <arg name="log_level" value="$(arg log_level)" />
+    <arg name="tip_link" value="$(arg tip_link)"/>
+    <arg name="root_link" value="$(arg root_link)"/>
+    <arg name="load_base" value="$(arg load_base)" />
+    <arg name="load_table" value="$(arg load_table)" />
+    <arg name="load_ati_sensor" value="$(arg load_ati_sensor)" />
+    <arg name="load_calib_tool" value="$(arg load_calib_tool)" />
+    <arg name="load_handle" value="$(arg load_handle)" />
+    <arg name="gazebo_gui" value="$(arg gazebo_gui)"/>
+  </include>
+
+</launch>

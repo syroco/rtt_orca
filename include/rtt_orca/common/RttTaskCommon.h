@@ -31,8 +31,8 @@ namespace common
             comm->setName(name);
             
             owner->provides("robot_model")->addOperation("loadModelFromFile",&RttTaskCommon::loadRobotModel,this , RTT::OwnThread);
-            owner->provides("robot_model")->addOperation("print", &orca::robot::RobotDynTree::print, &robot_ , RTT::OwnThread);
-            owner->provides("robot_model")->addOperation("setBaseFrame", &orca::robot::RobotDynTree::setBaseFrame, &robot_ , RTT::OwnThread);
+            owner->provides("robot_model")->addOperation("print", &orca::robot::RobotModel::print, &robot_ , RTT::OwnThread);
+            owner->provides("robot_model")->addOperation("setBaseFrame", &orca::robot::RobotModel::setBaseFrame, &robot_ , RTT::OwnThread);
             owner->provides("robot_model")->addOperation("setGravity", &RttTaskCommon::setGravity, this , RTT::OwnThread);
             owner->provides("robot_model")->provides("state")->addPort("JointPosition",port_jnt_pos_in_);
             owner->provides("robot_model")->provides("state")->addPort("JointVelocity",port_jnt_vel_in_);
@@ -211,8 +211,8 @@ namespace common
         Eigen::Matrix<double,6,1> base_vel_in_;
         Eigen::Matrix4d world_to_base_in_;
         
-        orca::robot::RobotDynTree& robot_;
-        orca::robot::EigenRobotState eigRobotState_;
+        orca::robot::RobotModel& robot_;
+        orca::robot::RobotState eigRobotState_;
         orca::common::TaskCommon& comm_;
         RTT::TaskContext * owner_;
     };
