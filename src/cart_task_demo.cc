@@ -55,7 +55,7 @@ bool configureHook()
           "orca_controller"
         ,robot_kinematics_
         ,ResolutionStrategy::OneLevelWeighted
-        ,QPSolver::qpOASES
+        ,QPSolverImplType::qpOASES
     );
 
     std::cout << "Controller is loaded" <<'\n';
@@ -66,46 +66,30 @@ bool configureHook()
     // position. This task is very optional
     joint_position_task_ = controller_->addTask<JointAccelerationTask>("JointPosTask");
     // Let's configure the internal PID
-    Eigen::VectorXd P(ndof);
-    P.setConstant(100);
-    joint_position_task_->pid()->setProportionalGain(P);
-
-    Eigen::VectorXd I(ndof);
-    I.setConstant(1);
-    joint_position_task_->pid()->setDerivativeGain(I);
-
-    Eigen::VectorXd windupLimit(ndof);
-    windupLimit.setConstant(10);
-    joint_position_task_->pid()->setWindupLimit(windupLimit);
-
-    Eigen::VectorXd D(ndof);
-    D.setConstant(10);
-    joint_position_task_->pid()->setDerivativeGain(D);
+    joint_position_task_->pid()->setProportionalGain( Eigen::VectorXd::Constant(ndof,100) );
+    joint_position_task_->pid()->setDerivativeGain( Eigen::VectorXd::Constant(ndof,1) );
+    joint_position_task_->pid()->setWindupLimit(Eigen::VectorXd::Constant(ndof,10));
+    joint_position_task_->pid()->setDerivativeGain( Eigen::VectorXd::Constant(ndof,10));
     // Set the weight for the task (its a regularization so it's small)
     joint_position_task_->setWeight(1.e-5);
 
-    // Cartesian Task
-    cart_task_ = controller_->addTask<CartesianTask>("CartTask_EE");
-    cart_task_->setControlFrame(robot_kinematics_->getLinkNames().back()); // We want to control the link_7
-    cart_task_->setRampDuration(0.5); // Activate immediately
-    // Set the pose desired for the link_7
+    auto cart_acc_pid = std::make_shared<CartesianAccelerationPID>("servo_controller");
+    Vector6d P;
+    P << 1000, 1000, 1000, 10, 10, 10;
+    cart_acc_pid->pid()->setProportionalGain(P);
+    Vector6d D;
+    D << 100, 100, 100, 1, 1, 1;
+    cart_acc_pid->pid()->setDerivativeGain(D);
+    cart_acc_pid->setControlFrame("link_7");
     Eigen::Affine3d cart_pos_ref;
-
-    // Set the desired cartesian velocity to zero
-    Vector6d cart_vel_ref;
-    cart_vel_ref.setZero();
-
-    // Set the desired cartesian velocity to zero
-    Vector6d cart_acc_ref;
-    cart_acc_ref.setZero();
-
-    // Now set the servoing PID
-    Vector6d cartP;
-    cartP << 100, 100, 100, 10, 10, 10;
-    cart_task_->servoController()->pid()->setProportionalGain(cartP);
-    Vector6d cartD;
-    cartD << 10, 10, 10, 1, 1, 1;
-    cart_task_->servoController()->pid()->setDerivativeGain(cartD);
+    cart_pos_ref.translation() = Eigen::Vector3d(0.3,-0.5,0.41); // x,y,z in meters
+    cart_pos_ref.linear() = orca::math::quatFromRPY(M_PI,0,0).toRotationMatrix();
+    Vector6d cart_vel_ref = Vector6d::Zero();
+    Vector6d cart_acc_ref = Vector6d::Zero();
+    cart_acc_pid->setDesired(cart_pos_ref.matrix(),cart_vel_ref,cart_acc_ref);
+    
+    auto cart_task = controller_->addTask<CartesianTask>("CartTask_EE");
+    cart_task->setServoController(cart_acc_pid);
 
     // The joint torque limit constraint
     joint_torque_constraint_ = controller_->addConstraint<JointTorqueLimitConstraint>("JointTorqueLimit");
